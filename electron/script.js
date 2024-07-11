@@ -108,8 +108,8 @@ class Calculator {
             "/": this.make_operation.bind(this),
         }
         this.control_operations = {
-            "+": () => this.change_size(1.25),
-            "-": () => this.change_size(1 / 1.25),
+            "+": () => this.change_size(1.1),
+            "-": () => this.change_size(1 / 1.1),
         }
     }
 
@@ -124,7 +124,7 @@ class Calculator {
         let newHeight = currentSize[1] * size
         let newWidth = currentSize[0] * size
 
-        if (newHeight < 200 || newHeight > 850) {
+        if (newHeight < 200 || newHeight > 1200) {
             return
         }
 
@@ -147,10 +147,10 @@ class Calculator {
     }
 
     handle_paste(text) {
-        const expression = /[^0-9\.\,\-e]/
+        const expression = /[^0-9e\.\,\-\+]/
 
         if (expression.test(text)) {
-            return
+            return ""
         } else {
             return text
         }

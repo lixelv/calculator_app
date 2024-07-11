@@ -1,5 +1,5 @@
-import { appWindow } from "@tauri-apps/api/window"
-const Decimal = require("decimal.js")
+import Decimal from "./decimal.mjs"
+const currentWindow = window.__TAURI__.window
 
 const output = document.getElementById("output")
 
@@ -107,16 +107,8 @@ class Calculator {
             "/": this.make_operation.bind(this),
         }
         this.control_operations = {
-            "+": () => {
-                ;(async () => {
-                    await this.change_size(1.25)
-                })()
-            },
-            "-": () => {
-                ;(async () => {
-                    await this.change_size(1 / 1.25)
-                })()
-            },
+            "+": async () => this.change_size(1.25),
+            "-": async () => this.change_size(1 / 1.25),
         }
     }
 
@@ -126,8 +118,7 @@ class Calculator {
     }
 
     async change_size(size) {
-        let currentSize = await appWindow.innerSize()
-
+        let currentSize = await currentWindow.innerSize()
         let newHeight = currentSize.height * size
         let newWidth = currentSize.width * size
 
@@ -137,9 +128,12 @@ class Calculator {
 
         console.log(currentSize, newHeight, newWidth)
 
-        // Вызываем метод для обновления размера окна
-        await appWindow.setSize(
-            new PhysicalSize(Math.floor(newWidth), Math.floor(newHeight))
+        // Используем Tauri API для изменения размера окна
+        await currentWindow.setSize(
+            new currentWindow.PhysicalSize(
+                Math.floor(newWidth),
+                Math.floor(newHeight)
+            )
         )
 
         // Обновляем размер окна
@@ -155,10 +149,10 @@ class Calculator {
     }
 
     handle_paste(text) {
-        const expression = /[^0-9\.\,\-e]/
+        const expression = /[^0-9e\.\,\-\+]/
 
         if (expression.test(text)) {
-            return
+            return ""
         } else {
             return text
         }
@@ -303,9 +297,6 @@ Array.from(document.getElementsByClassName("number-button")).forEach(
 Array.from(document.getElementsByClassName("operation-button")).forEach(
     handle_button_click
 )
-Array.from(document.getElementsByClassName("close-button")).forEach(
-    handle_button_click
-)
 
 document.addEventListener("keydown", (event) => {
     if (event.key in keys) {
@@ -366,7 +357,6 @@ document.addEventListener("copy", function (event) {
 // })
 
 async function updateWindowSize() {
-    // const style = window.getComputedStyle(display);
     const ratio = 1.51
 
     const height = window.innerHeight
@@ -375,8 +365,11 @@ async function updateWindowSize() {
     // Добавляем небольшой отступ для безопасности
     const safetyPadding = 1
 
-    await appWindow.setSize(
-        new PhysicalSize(Math.ceil(width) + safetyPadding, Math.ceil(height))
+    await currentWindow.setSize(
+        new currentWindow.PhysicalSize(
+            Math.ceil(width) + safetyPadding,
+            Math.ceil(height)
+        )
     )
 }
 
@@ -385,7 +378,7 @@ document.addEventListener("DOMContentLoaded", updateWindowSize)
 
 display.onmousedown = async function (event) {
     // Получаем текущую позицию окна
-    let windowPosition = await appWindow.innerPosition()
+    let windowPosition = await currentWindow.innerPosition()
 
     // Запоминаем начальную позицию курсора
     let startMouseX = event.screenX
@@ -397,8 +390,8 @@ display.onmousedown = async function (event) {
         let deltaY = event.screenY - startMouseY
 
         // Перемещаем окно на это смещение
-        await appWindow.setPosition(
-            new PhysicalPosition(
+        await currentWindow.setPosition(
+            new currentWindow.PhysicalPosition(
                 windowPosition.x + deltaX,
                 windowPosition.y + deltaY
             )
@@ -407,10 +400,29 @@ display.onmousedown = async function (event) {
 
     document.addEventListener("mousemove", onMouseMove)
 
-    display.onmouseup = async function () {
+    display.onmouseup = function () {
         document.removeEventListener("mousemove", onMouseMove)
         display.onmouseup = null
     }
 
     event.preventDefault() // Предотвращаем стандартное поведение
 }
+
+// Добавим функцию для закрытия окна через Tauri
+async function closeWindow() {
+    await currentWindow.close()
+}
+
+// Изменим обработчик для кнопки закрытия
+Array.from(document.getElementsByClassName("close-button")).forEach(
+    (button) => {
+        button.onclick = async () => {
+            if (button.innerHTML === "×") {
+                await closeWindow()
+            } else {
+                animate(button, "animated", 600)
+                calculator.handle_press(button.innerHTML)
+            }
+        }
+    }
+)

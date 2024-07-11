@@ -14,8 +14,8 @@
     "license": "ISC",
     "description": "",
     "build": {
-        "appId": "com.lixelv.floating_calculator",
-        "productName": "Floating Calculator",
+        "appId": "com.lixelv.calculator",
+        "productName": "Calculator",
         "win": {
             "target": "nsis",
             "icon": "icon.ico"

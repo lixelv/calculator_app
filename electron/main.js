@@ -16,7 +16,7 @@ function createWindow() {
         transparent: true, // Прозрачное
         alwaysOnTop: true, // Всегда поверх всех окон
         webPreferences: {
-            preload: path.join(__dirname, "script.js"),
+            // preload: path.join(__dirname, "script.js"),
             enableRemoteModule: true, // Включаем remote
             nodeIntegration: true, // Включаем интеграцию Node.js
             contextIsolation: false, // Отключаем изоляцию контекста
