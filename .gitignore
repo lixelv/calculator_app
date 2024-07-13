@@ -1,0 +1,5 @@
+/electron/node_modules
+/electron/dist
+/tauri/node_modules
+/tauri/.vscode
+/test

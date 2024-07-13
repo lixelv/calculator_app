@@ -1,0 +1,222 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+:root {
+    --lt-color-gray-100: #f8f9fc;
+    --lt-color-gray-200: #f1f3f9;
+    --lt-color-gray-300: #dee3ed;
+    --lt-color-gray-400: #c2c9d6;
+    --lt-color-gray-500: #8f96a3;
+    --lt-color-gray-600: #5e636e;
+    --lt-color-gray-700: #2f3237;
+    --lt-color-gray-800: #1d1e20;
+    --lt-color-gray-900: #111213;
+    --lt-color-red: #e74e4e;
+    --lt-color-light-red: #682828;
+    --lt-color-blue: #346c99;
+    --lt-color-green-default: rgba(87, 184, 70, 0.8);
+    --lt-color-green-active: rgba(87, 184, 70, 1);
+    --lt-shadowDefault: 0 2px 6px -1px rgba(0, 0, 0, 0.16),
+        0 1px 4px -1px rgba(0, 0, 0, 0.04);
+    --lt-shadowActive: 0 0 8px -2px rgba(0, 0, 0, 0.1),
+        0 6px 20px -3px rgba(0, 0, 0, 0.2);
+    --lt-color-white: #fff !important;
+    --lt-color-light-white: rgba(255, 255, 255, 0.75) !important;
+    --lt-color-black: #111213 !important;
+    --lt-color-transparent: rgba(255, 255, 255, 0) !important;
+    --lt-color-background-light: var(--lt-color-gray-100) !important;
+    --lt-color-background-default: var(--lt-color-gray-200) !important;
+    --lt-color-background-dark: var(--lt-color-gray-300) !important;
+    --lt-color-border-light: var(--lt-color-gray-200) !important;
+    --lt-color-border-default: var(--lt-color-gray-300) !important;
+    --lt-color-border-dark: var(--lt-color-gray-400) !important;
+    --lt-color-text-very-light: var(--lt-color-gray-500) !important;
+    --lt-color-text-light: var(--lt-color-gray-600) !important;
+    --lt-color-text-default: var(--lt-color-gray-700) !important;
+    --lt-color-text-dark: var(--lt-color-gray-800) !important;
+    --lt-color-overlay-default: #fff !important;
+    --lt-color-overlay-dark: #fff !important;
+    --lt-color-overlay-transparent: rgba(0, 0, 0, 0.1) !important;
+    --lt-shadow-website-overlay: 0 0 7px 0 rgba(0, 0, 0, 0.3) !important;
+    --lt-global-size: 12.61vh !important;
+    --size: 1;
+}
+
+@font-face {
+    font-family: "SF";
+    src: url("SF-Pro-Rounded-Bold.otf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+body,
+html {
+    height: 100%;
+    margin: 0;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    font-family: "SF", sans-serif;
+    background-color: var(--lt-color-gray-900);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button {
+    font-family: "SF", sans-serif;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 100%;
+}
+
+#output {
+    width: calc(
+        4 * var(--lt-global-size) + 3 * (var(--lt-global-size) / 10) * 1.5
+    );
+    height: calc(var(--lt-global-size) * 1.3);
+    max-width: 100%;
+    word-wrap: normal; /* Изменено с break-word */
+    overflow-wrap: normal; /* Изменено с break-word */
+    text-align: end;
+    color: var(--lt-color-white);
+    font-size: calc(var(--lt-global-size));
+    padding-bottom: calc(var(--lt-global-size) * 0.2);
+    white-space: nowrap; /* Изменено с pre-wrap */
+    display: block;
+    overflow-x: auto; /* Горизонтальный скролл */
+    overflow-y: hidden; /* Убираем вертикальный скролл */
+    /* direction: rtl;  Устанавливает направление текста справа налево */
+}
+
+#output::-webkit-scrollbar {
+    height: calc(var(--lt-global-size) * 0.1);
+    background-color: var(--lt-color-transparent);
+    position: absolute;
+}
+
+#output::-webkit-scrollbar-thumb {
+    background-color: var(--lt-color-light-white);
+    border-radius: calc(var(--lt-global-size) * 0.05);
+}
+
+#output::-webkit-scrollbar-thumb:hover {
+    background-color: var(--lt-color-light-white);
+}
+
+.space {
+    height: calc(var(--lt-global-size) * 0.2);
+}
+
+.main-container {
+    width: 100vw;
+    overflow: hidden;
+    padding: calc(var(--lt-global-size) * 0.4);
+    display: grid;
+    background-color: var(--lt-color-gray-900);
+    grid-row: 2;
+}
+
+.button-container {
+    display: grid;
+    align-self: center;
+    grid-template-columns: repeat(4, var(--lt-global-size));
+    grid-template-rows: repeat(5, var(--lt-global-size));
+    --gap-size: calc(var(--lt-global-size) * 0.15);
+    grid-column-gap: var(--gap-size);
+    grid-row-gap: var(--gap-size);
+}
+
+.button-container button {
+    font-size: calc(var(--lt-global-size) / 2.5);
+}
+
+.number-button {
+    --background-color: var(--lt-color-gray-700);
+    --font-color: var(--lt-color-white);
+    background-color: var(--background-color);
+    color: var(--font-color);
+}
+
+.operation-button {
+    --background-color: var(--lt-color-gray-800);
+    --font-color: var(--lt-color-white);
+    background-color: var(--background-color);
+    color: var(--font-color);
+}
+
+.close-button {
+    --font-color: var(--lt-color-white);
+    --background-color: var(--lt-color-light-red);
+    background-color: var(--background-color);
+    color: var(--font-color);
+}
+
+.error {
+    --animation-color: var(--lt-color-red);
+    animation: handle_eval 0.8s;
+}
+
+.success {
+    --animation-color: var(--lt-color-green-active);
+    animation: handle_eval 0.8s;
+}
+
+.copy-paste {
+    --animation-color: var(--lt-color-blue);
+    animation: handle_eval 0.8s;
+}
+
+.activated-button {
+    --background-color: var(--lt-color-green-default);
+    --font-color: var(--lt-color-white);
+    transition: all 0.3s;
+    color: var(--font-color);
+}
+
+.animated {
+    animation: pressed_button 0.6s;
+}
+
+@keyframes pressed_button {
+    10% {
+        background: var(--lt-color-gray-300);
+        color: var(--lt-color-black);
+        transform: scale(calc(var(--size) * 1.075));
+    }
+    100% {
+        background: var(--background-color);
+        color: var(--font-color);
+        transform: scale(calc(var(--size)));
+    }
+}
+
+@keyframes handle_eval {
+    0% {
+        box-shadow: none;
+    }
+    30% {
+        box-shadow: inset 0 0 0 calc(var(--lt-global-size) * 0.075)
+            var(--animation-color);
+    }
+    100% {
+        box-shadow: none;
+    }
+}
+
+@media (hover: hover) {
+    button:hover {
+        --size: 1.1;
+        transition: all 0.2s;
+        transform: scale(1.1);
+    }
+}
