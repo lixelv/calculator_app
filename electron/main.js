@@ -5,7 +5,7 @@ const path = require("path")
 remote.initialize()
 
 function createWindow() {
-    const ratio = 1.51
+    const ratio = 1.5
     const height = 312
     const width = Math.ceil(height / ratio)
 

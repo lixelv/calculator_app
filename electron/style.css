@@ -80,7 +80,7 @@
     --lt-color-overlay-dark: #fff !important;
     --lt-color-overlay-transparent: rgba(0, 0, 0, 0.1) !important;
     --lt-shadow-website-overlay: 0 0 7px 0 rgba(0, 0, 0, 0.3) !important;
-    --lt-global-size: 12.62vh !important;
+    --lt-global-size: 12.6vh !important;
     --theme-on-hover: rgba(0, 0, 0, 0);
     --theme-on-hover-size: 0;
     --theme-output-font-size: 1;
@@ -233,9 +233,13 @@ button {
 }
 
 .main-container {
+    height: 100vh;
+    aspect-ratio: 1 / 1.5;
     overflow: hidden;
     padding: calc(var(--lt-global-size) * 0.4);
     display: grid;
+    justify-items: center;
+    align-items: center;
     background-color: var(--theme-background-color);
     grid-row: 2;
     border-radius: calc(var(--lt-global-size) * 0.4);

@@ -440,7 +440,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 if (currentWindow !== undefined) {
     function updateWindowSize(height) {
-        const ratio = 1.51
+        const ratio = 1.5
 
         height = height || window.height
         let width = height / ratio
