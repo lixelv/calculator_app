@@ -1,6 +1,6 @@
 @font-face {
     font-family: "SF-Pro";
-    src: url("SF-Pro-Rounded-Bold.otf") format("opentype");
+    src: url("../assets/SF-Pro-Rounded-Bold.otf") format("opentype");
     font-weight: normal;
     font-style: normal;
 }
@@ -83,10 +83,9 @@
     --lt-global-size: 12.6vh !important;
     --theme-on-hover: rgba(0, 0, 0, 0);
     --theme-on-hover-size: 0;
-    --theme-output-font-size: 1;
-    --theme-button-font-size: 1;
     --base-output-font-size: var(--lt-global-size);
     --base-button-font-size: calc(var(--lt-global-size) / 2);
+    --theme-relative-font-size: 1;
     --size: 1;
 }
 
@@ -105,8 +104,8 @@
 
 .theme-2 {
     --theme-font-color: var(--lt-color-gray-700);
-    --theme-font-oposite-color: var(--lt-color-gray-300);
-    --theme-background-color: var(--lt-color-gray-300);
+    --theme-font-oposite-color: var(--lt-color-gray-100);
+    --theme-background-color: var(--lt-color-gray-200);
     --theme-operation-color: var(--lt-color-gray-350);
     --theme-number-color: var(--lt-color-gray-400);
     --theme-button-oposite-color: var(--lt-color-gray-700);
@@ -146,34 +145,8 @@
     --theme-number-color: var(--theme-background-color);
 }
 
-.font-1 {
-    --theme-relative-font-size: 1;
-    --theme-button-font-size: calc(
-        var(--base-button-font-size) * var(--theme-relative-font-size)
-    );
-    --theme-output-font-size: calc(
-        var(--base-output-font-size) * var(--theme-relative-font-size)
-    );
-}
-
-.font-2 {
-    --theme-relative-font-size: 0.8;
-    --theme-button-font-size: calc(
-        var(--base-button-font-size) * var(--theme-relative-font-size)
-    );
-    --theme-output-font-size: calc(
-        var(--base-output-font-size) * var(--theme-relative-font-size)
-    );
-}
-
-.font-3 {
-    --theme-relative-font-size: 1.2;
-    --theme-button-font-size: calc(
-        var(--base-button-font-size) * var(--theme-relative-font-size)
-    );
-    --theme-output-font-size: calc(
-        var(--base-output-font-size) * var(--theme-relative-font-size)
-    );
+.transition * {
+    transition: all 0.3s;
 }
 
 body,
@@ -186,6 +159,12 @@ html {
     display: flex;
     justify-content: center;
     align-items: center;
+    --theme-button-font-size: calc(
+        var(--base-button-font-size) * var(--theme-relative-font-size)
+    );
+    --theme-output-font-size: calc(
+        var(--base-output-font-size) * var(--theme-relative-font-size)
+    );
 }
 
 button {

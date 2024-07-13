@@ -1,12 +1,11 @@
 const { app, BrowserWindow } = require("electron")
 const remote = require("@electron/remote/main")
-const path = require("path")
 
 remote.initialize()
 
 function createWindow() {
     const ratio = 1.5
-    const height = 312
+    const height = 50
     const width = Math.ceil(height / ratio)
 
     return new BrowserWindow({
@@ -34,7 +33,7 @@ app.whenReady().then(() => {
         event.preventDefault()
     })
     win.setVibrancy("dark")
-    win.loadFile("index.html")
+    win.loadFile("src/index.html")
 
     app.on("activate", function () {
         if (BrowserWindow.getAllWindows().length === 0) createWindow()
