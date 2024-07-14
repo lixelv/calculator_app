@@ -21,7 +21,7 @@ You can use keyboard, for all buttons on the calculator. Also, for **⌃ AC ⌫ 
 
 ### Customization
 
-We've added a new ⌃ button for changing your settings, just press it, and after that you can change settings. With 123 keys you will change theme, with 456 you will change roundness, and with 0 key you can change buttons transparency. With AC you will change setting to default, also +- changes window size and \* changes font size.
+We've added a new ⌃ button for changing your settings, just press it, and after that you can change settings. With 123 keys you will change theme, with 456 you will change roundness, and with 0 key you can change buttons transparency. With AC you will change setting to default, also +- changes window size and \*/ changes font size.
 
 ## Download
 
