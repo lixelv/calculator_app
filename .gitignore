@@ -2,4 +2,7 @@
 /electron/dist
 /tauri/node_modules
 /tauri/.vscode
+/__pycache__
+/.vercel
 /test
+.vercel

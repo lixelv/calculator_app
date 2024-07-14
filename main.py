@@ -13,4 +13,4 @@ async def index():
     
 @app.get("/favicon.ico")
 async def favicon():
-    return FileResponse("src/assers/icon.ico")
+    return FileResponse("src/assets/icon.ico")

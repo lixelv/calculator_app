@@ -80,7 +80,7 @@
     --lt-color-overlay-dark: #fff !important;
     --lt-color-overlay-transparent: rgba(0, 0, 0, 0.1) !important;
     --lt-shadow-website-overlay: 0 0 7px 0 rgba(0, 0, 0, 0.3) !important;
-    --lt-global-size: 12.6vh !important;
+    --lt-global-size: min(12.6vh, 12.6vw * 1.5) !important;
     --theme-on-hover: rgba(0, 0, 0, 0);
     --theme-on-hover-size: 0;
     --base-output-font-size: var(--lt-global-size);
