@@ -1,6 +1,4 @@
-import Decimal from "./decimal.mjs"
 const currentWindow = window.__TAURI__.window
-
 const output = document.getElementById("output")
 
 const keys = {
@@ -107,8 +105,8 @@ class Calculator {
             "/": this.make_operation.bind(this),
         }
         this.control_operations = {
-            "+": async () => this.change_size(1.25),
-            "-": async () => this.change_size(1 / 1.25),
+            "+": () => this.change_size(1.25),
+            "-": () => this.change_size(1 / 1.25),
         }
     }
 
@@ -130,10 +128,7 @@ class Calculator {
 
         // Используем Tauri API для изменения размера окна
         await currentWindow.setSize(
-            new currentWindow.PhysicalSize(
-                Math.floor(newWidth),
-                Math.floor(newHeight)
-            )
+            new currentWindow.LogicalSize(newWidth, newHeight)
         )
 
         // Обновляем размер окна

@@ -6,10 +6,9 @@
         <title>Calculator</title>
         <link rel="stylesheet" href="style.css" />
     </head>
-    <body>
+    <body style="visibility: hidden" class="transition">
         <div class="main-container" id="main-object">
             <a id="output">0</a>
-            <div class="space"></div>
             <div class="button-container">
                 <button class="operation-button">⌃</button>
                 <button class="operation-button">AC</button>
@@ -27,12 +26,12 @@
                 <button class="number-button">2</button>
                 <button class="number-button">3</button>
                 <button class="operation-button">+</button>
-                <button class="close-button">×</button>
+                <button class="close-button"></button>
                 <button class="number-button">0</button>
                 <button class="number-button">.</button>
                 <button class="operation-button" id="equal">=</button>
             </div>
         </div>
-        <script type="module" src="script.js"></script>
+        <script src="script.js"></script>
     </body>
 </html>

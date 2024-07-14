@@ -2,3 +2,4 @@
 /electron/dist
 /tauri/node_modules
 /tauri/.vscode
+/test

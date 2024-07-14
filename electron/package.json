@@ -1,11 +1,12 @@
 {
     "name": "floating_calculator",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "main": "main.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "electron .",
         "build": "electron-builder",
+        "dev": "electron . --dev",
         "pack": "electron-builder --dir",
         "dist": "electron-builder"
     },
@@ -18,7 +19,7 @@
         "productName": "Calculator",
         "win": {
             "target": "nsis",
-            "icon": "icon.ico"
+            "icon": "/src/assets/icon.ico"
         }
     },
     "dependencies": {

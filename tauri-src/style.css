@@ -65,7 +65,7 @@ html {
     overflow-y: hidden;
     overflow-x: hidden;
     font-family: "SF", sans-serif;
-    background-color: var(--lt-color-transparent);
+    background-color: var(--lt-color-gray-900);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -118,12 +118,12 @@ button {
 }
 
 .main-container {
+    width: 100vw;
     overflow: hidden;
     padding: calc(var(--lt-global-size) * 0.4);
     display: grid;
     background-color: var(--lt-color-gray-900);
     grid-row: 2;
-    border-radius: calc(var(--lt-global-size) * 0.4);
 }
 
 .button-container {
