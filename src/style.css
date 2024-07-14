@@ -1,6 +1,6 @@
 @font-face {
     font-family: "SF-Pro";
-    src: url("../assets/SF-Pro-Rounded-Bold.otf") format("opentype");
+    src: url("assets/SF-Pro-Rounded-Bold.otf") format("opentype");
     font-weight: normal;
     font-style: normal;
 }
@@ -155,7 +155,7 @@ html {
     margin: 0;
     overflow-y: hidden;
     overflow-x: hidden;
-    background-color: var(--lt-color-transparent);
+    background-color: var(--theme-background-color);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -213,7 +213,7 @@ button {
 
 .main-container {
     height: 100vh;
-    aspect-ratio: 1 / 1.5;
+    width: 100vw;
     overflow: hidden;
     padding: calc(var(--lt-global-size) * 0.4);
     display: grid;

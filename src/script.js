@@ -1,6 +1,13 @@
-const currentWindow = window.__TAURI__.window
-const output = document.getElementById("output")
+// New containts foranimate
+let timers = {}
+let uniqueIdCounter = 0
 
+// Global constants for showing the calc result and for animation effect
+const display = document.getElementById("main-object")
+const output = document.getElementById("output")
+const options = ["theme", "round"]
+
+// Keys, that are compare with calculator buttons
 const keys = {
     Delete: "AC",
     Backspace: "⌫",
@@ -26,51 +33,106 @@ const keys = {
     "=": "=",
 }
 
+// endregion
 // region utils
-let timers = {}
-let uniqueIdCounter = 0
-const display = document.getElementById("main-object")
+// Using local storage with JSON for save and get data
+function getFromLocalStorage(key) {
+    const value = localStorage.getItem(key)
+    return value ? JSON.parse(value) : null
+}
 
+function saveToLocalStorage(key, value) {
+    localStorage.setItem(key, JSON.stringify(value))
+}
+
+function change_setting(theme_number, setting) {
+    // Search for all classes that start with setting + "-"
+    const currentThemeClasses = Array.from(document.body.classList).filter(
+        (theme) => theme.startsWith(setting + "-")
+    )
+
+    // Remove all classes that start with setting + "-"
+    console.log(currentThemeClasses)
+    currentThemeClasses.forEach((themeClass) => {
+        document.body.classList.remove(themeClass)
+    })
+
+    // Adding new class with setting + "-" + theme_number
+    document.body.classList.add(setting + "-" + theme_number)
+    saveToLocalStorage("user_" + setting, theme_number)
+}
+
+// Function generates unique id for animate func
 function generateUniqueId() {
     uniqueIdCounter += 1
     return "unique-id-" + uniqueIdCounter
 }
 
 function animate(el, cls, duration) {
-    // Проверяем, есть ли у элемента id, если нет - генерируем уникальный id
+    // Check if the element has an id, if not - generate unique id
     if (!el.id) {
         el.id = generateUniqueId()
     }
 
     const elementId = el.id
 
-    // Если элемент уже имеет анимационный класс, удаляем его и сбрасываем анимацию
+    // If element already has animation class, remove it and reset animation
     if (timers[elementId]) {
         el.classList.remove(timers[elementId].class)
-        void el.offsetWidth // Принудительный reflow для сброса анимации
+        void el.offsetWidth // Set reflow for reset animation
     }
 
-    // Если существует таймер для этого элемента, очищаем его
+    // Remove the timer if it exists
     if (timers[elementId]) {
         clearTimeout(timers[elementId].timeout)
     }
 
-    // Добавляем новый анимационный класс к элементу
+    // Add the animation class to the element
     el.classList.add(cls)
 
-    // Устанавливаем новый таймер для удаления класса после завершения анимации
+    // Set new timer for removing the animation class after the animation duration
     timers[elementId] = {
         class: cls,
         timeout: setTimeout(() => {
             el.classList.remove(cls)
-            delete timers[elementId] // Удаляем запись таймера после его завершения
+            delete timers[elementId] // Delete the timer after the animation is complete
         }, duration),
     }
 }
-// endregion
 
+// Function for handle settings on start
+function handle_setting(setting) {
+    const value = getFromLocalStorage("user_" + setting) || 1
+    document.body.classList.add(setting + "-" + value)
+}
+
+function on_start() {
+    // Handle settings
+    options.forEach(handle_setting)
+
+    // Handle transparent buttons
+    const buttons_state = getFromLocalStorage("transparentButtons") || "0"
+    if (Number(buttons_state)) {
+        document.body.classList.add("no-button")
+    }
+
+    // Remove the hidden class when the app is ready
+    document.body.style = ""
+
+    // Also update the font size from local storage
+    document.body.style.setProperty(
+        "--theme-relative-font-size",
+        getFromLocalStorage("fontSize") || 1
+    )
+}
+// endregion
+// region calculator
+
+// Class for calculator, used to handle button clicks
 class Calculator {
     constructor(output) {
+        // Init variables for previous number and current operation, also setting the output on "0"
+        // Current number was mad to handle pressing = multiple times
         this.output = output
         this.output.innerHTML = "0"
         this.prev_num = null
@@ -80,6 +142,8 @@ class Calculator {
         this.is_entered = false
 
         this.control = false
+
+        // Init operators and control operations for handle button clicks
         this.operators = {
             AC: (value) => {
                 this.AC_clear()
@@ -105,36 +169,83 @@ class Calculator {
             "/": this.make_operation.bind(this),
         }
         this.control_operations = {
-            "+": () => this.change_size(1.25),
-            "-": () => this.change_size(1 / 1.25),
+            "+": () => this.change_size(1.1),
+            "-": () => this.change_size(1 / 1.1),
+            "*": () => this.change_font_size(1.02),
+            "/": () => this.change_font_size(1 / 1.02),
+            AC: () => this.clear_settings(),
+            0: () => this.switch_buttons(),
+            1: () => change_setting(1, "theme"),
+            2: () => change_setting(2, "theme"),
+            3: () => change_setting(3, "theme"),
+            4: () => change_setting(1, "round"),
+            5: () => change_setting(2, "round"),
+            6: () => change_setting(3, "round"),
         }
     }
 
+    // Function for checking if string is numeric
     is_numeric(str) {
         if (typeof str != "string") return false // we only process strings!
         return !isNaN(str) && !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
     }
 
-    async change_size(size) {
-        let currentSize = await currentWindow.innerSize()
-        let newHeight = currentSize.height * size
-        let newWidth = currentSize.width * size
+    // Function for change window size
+    change_size(size) {
+        alert("Not supported on web version")
+    }
 
-        if (newHeight < 200 || newHeight > 850) {
+    change_font_size(size) {
+        const currentFontSize = getComputedStyle(
+            document.body
+        ).getPropertyValue("--theme-relative-font-size")
+
+        const newFontSize = Number(currentFontSize) * size
+
+        // If new screen is too big or too small we are exiting function
+        if (newFontSize < 0.5 || newFontSize > 1.2) {
             return
         }
 
-        console.log(currentSize, newHeight, newWidth)
-
-        // Используем Tauri API для изменения размера окна
-        await currentWindow.setSize(
-            new currentWindow.LogicalSize(newWidth, newHeight)
+        document.body.style.setProperty(
+            "--theme-relative-font-size",
+            newFontSize || 1
         )
 
-        // Обновляем размер окна
-        setTimeout(updateWindowSize, 40)
+        saveToLocalStorage("fontSize", newFontSize)
     }
 
+    // Function for switch buttons from transparent to not transparent and ovice versa
+    switch_buttons() {
+        // Getting current state
+        let current_state = localStorage.getItem("transparentButtons") || "0"
+        current_state = Number(current_state) ? 0 : 1
+
+        // Saving current state
+        saveToLocalStorage("transparentButtons", current_state)
+
+        // Switching class
+        if (current_state) {
+            document.body.classList.add("no-button")
+        } else {
+            document.body.classList.remove("no-button")
+        }
+    }
+
+    // Function for clear settings
+    clear_settings() {
+        document.body.classList = ["transition"]
+        document.body.style = ""
+
+        options.forEach((option) => {
+            document.body.classList.add(option + "-1")
+            saveToLocalStorage("user_" + option, 1)
+        })
+        saveToLocalStorage("transparentButtons", 0)
+        saveToLocalStorage("fontSize", 1)
+    }
+
+    // Function for enterung the second number
     make_operation(value) {
         this.current_operation = value
         this.current_number = null
@@ -143,6 +254,7 @@ class Calculator {
         this.output.innerHTML = "0"
     }
 
+    // Function for handle paste if it is legit
     handle_paste(text) {
         const expression = /[^0-9e\.\,\-\+]/
 
@@ -153,6 +265,7 @@ class Calculator {
         }
     }
 
+    // Function adding a number to the output
     append_value(value) {
         if (
             this.output.innerHTML === "0" &&
@@ -163,6 +276,7 @@ class Calculator {
         this.output.innerHTML += value
     }
 
+    // Function for clearing the output
     AC_clear() {
         this.output.innerHTML = "0"
 
@@ -173,6 +287,8 @@ class Calculator {
         this.current_operation = null
     }
 
+    // Function for removing the last one symbol
+    // And it handles 0 as well, like "ERROR" also
     clear_output() {
         if (this.output.innerHTML.length > 0 && this.output.innerHTML !== "0") {
             this.output.innerHTML = this.output.innerHTML.slice(0, -1)
@@ -182,6 +298,7 @@ class Calculator {
         }
     }
 
+    // Function for calculating the result
     calculate() {
         const last_num = new Decimal(
             this.current_number || this.output.innerHTML
@@ -204,24 +321,29 @@ class Calculator {
         }
     }
 
+    // Function for evaluating the result
     handle_eval() {
         let result = this.calculate()
+
+        // Saving the second number as number for new operation
+        // To handle multiple =
         if (this.current_number === null) {
             this.current_number = this.output.innerHTML
         }
+
+        // Saving the result as fisrt operation number
         this.prev_num = result
 
+        // If result is not finite we are showing error
         if (result.isFinite()) {
             result = result.toString()
-            // if (result[result.length - 1] === "-") {
-            //     result = result.slice(0, -1)
-            // }
             this.show_success(result)
         } else {
             this.show_error(`Invalid expression: ${this.output.innerHTML}`)
         }
     }
 
+    // Function for handling operations
     handle_operation(value) {
         if (this.control && value in this.control_operations) {
             this.control_operations[value]()
@@ -236,6 +358,7 @@ class Calculator {
         }
     }
 
+    // Function for handling button presses
     handle_press(value) {
         if (value == "×") {
             window.close()
@@ -253,6 +376,7 @@ class Calculator {
         }
     }
 
+    // Function for showing errors
     show_error(error) {
         console.log(error)
         const element = display
@@ -260,6 +384,7 @@ class Calculator {
         animate(element, "error", 800)
     }
 
+    // Function for showing successful results
     show_success(result) {
         console.log(result)
         const element = display
@@ -270,8 +395,7 @@ class Calculator {
 
 let calculator = new Calculator(output)
 
-// document.addEventListener("DOMContentLoaded", updateWindowSize)
-
+// Function for handling button clicks
 function handle_button_click(button) {
     button.onclick = () => {
         if (button.innerHTML === "⌃") {
@@ -286,14 +410,8 @@ function handle_button_click(button) {
     }
 }
 
-Array.from(document.getElementsByClassName("number-button")).forEach(
-    handle_button_click
-)
-Array.from(document.getElementsByClassName("operation-button")).forEach(
-    handle_button_click
-)
-
-document.addEventListener("keydown", (event) => {
+// Function for handling keydown events
+function handle_keydown(event) {
     if (event.key in keys) {
         const value = keys[event.key]
         const elements = Array.from(document.getElementsByTagName("button"))
@@ -308,27 +426,25 @@ document.addEventListener("keydown", (event) => {
             }
         })
     }
-})
+}
 
-document.addEventListener("keydown", (event) => {
-    console.log(`Нажата клавиша: ${event.key}`)
-})
-
-document.addEventListener("paste", function (event) {
-    // Отключаем стандартное поведение, если это необходимо
+// Function for handling paste events
+function handle_paste(event) {
+    // Disable default behavior if necessary
     event.preventDefault()
 
-    // Получаем данные из буфера обмена
+    // Get data from clipboard
     const clipboardData = event.clipboardData || window.clipboardData
     const pastedData = calculator.handle_paste(clipboardData.getData("Text"))
 
     calculator.append_value(pastedData)
     const element = display
     animate(element, "copy-paste", 800)
-})
+}
 
-document.addEventListener("copy", function (event) {
-    // Отключаем стандартное поведение, если это необходимо
+// Function for handling copy events
+function handle_copy(event) {
+    // Disable default behavior if necessary
     event.preventDefault()
     let content = calculator.output.innerHTML
 
@@ -337,87 +453,26 @@ document.addEventListener("copy", function (event) {
     }
 
     if (navigator.clipboard) {
-        // Вставляем текстовые данные в буфер обмена
+        // Insert text data into clipboard
         navigator.clipboard.writeText(content)
         const element = display
         animate(element, "copy-paste", 800)
     } else {
         console.error("Clipboard API not supported")
     }
-})
-
-// contextBridge.exposeInMainWorld("electron", {
-//     resizeWindow: (width, height) =>
-//         ipcRenderer.send("resize-window", width, height),
-// })
-
-async function updateWindowSize() {
-    const ratio = 1.51
-
-    const height = window.innerHeight
-    const width = height / ratio
-
-    // Добавляем небольшой отступ для безопасности
-    const safetyPadding = 1
-
-    await currentWindow.setSize(
-        new currentWindow.PhysicalSize(
-            Math.ceil(width) + safetyPadding,
-            Math.ceil(height)
-        )
-    )
 }
 
-document.addEventListener("DOMContentLoaded", updateWindowSize)
-// window.addEventListener("resize", updateWindowSize)
-
-display.onmousedown = async function (event) {
-    // Получаем текущую позицию окна
-    let windowPosition = await currentWindow.innerPosition()
-
-    // Запоминаем начальную позицию курсора
-    let startMouseX = event.screenX
-    let startMouseY = event.screenY
-
-    async function onMouseMove(event) {
-        // Вычисляем смещение курсора
-        let deltaX = event.screenX - startMouseX
-        let deltaY = event.screenY - startMouseY
-
-        // Перемещаем окно на это смещение
-        await currentWindow.setPosition(
-            new currentWindow.PhysicalPosition(
-                windowPosition.x + deltaX,
-                windowPosition.y + deltaY
-            )
-        )
-    }
-
-    document.addEventListener("mousemove", onMouseMove)
-
-    display.onmouseup = function () {
-        document.removeEventListener("mousemove", onMouseMove)
-        display.onmouseup = null
-    }
-
-    event.preventDefault() // Предотвращаем стандартное поведение
-}
-
-// Добавим функцию для закрытия окна через Tauri
-async function closeWindow() {
-    await currentWindow.close()
-}
-
-// Изменим обработчик для кнопки закрытия
-Array.from(document.getElementsByClassName("close-button")).forEach(
-    (button) => {
-        button.onclick = async () => {
-            if (button.innerHTML === "×") {
-                await closeWindow()
-            } else {
-                animate(button, "animated", 600)
-                calculator.handle_press(button.innerHTML)
-            }
-        }
-    }
+document.addEventListener("keydown", handle_keydown)
+document.addEventListener("paste", handle_paste)
+document.addEventListener("copy", handle_copy)
+document.addEventListener("DOMContentLoaded", on_start)
+Array.from(document.getElementsByClassName("number-button")).forEach(
+    handle_button_click
 )
+Array.from(document.getElementsByClassName("operation-button")).forEach(
+    handle_button_click
+)
+Array.from(document.getElementsByClassName("close-button")).forEach(
+    handle_button_click
+)
+// endregion
