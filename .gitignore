@@ -5,4 +5,5 @@
 /__pycache__
 /.vercel
 /test
+/node_modules
 .vercel
