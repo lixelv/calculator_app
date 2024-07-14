@@ -1,7 +1,4 @@
 // New containts foranimate
-import { inject } from "@vercel/analytics"
-inject()
-
 let timers = {}
 let uniqueIdCounter = 0
 
