@@ -5,10 +5,17 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Calculator</title>
         <link rel="stylesheet" href="src/style.css" />
+        <link
+            rel="shortcut icon"
+            href="src/assets/logo-512.png"
+            type="image/x-icon"
+        />
+        <link rel="manifest" href="/manifest.json" />
     </head>
     <body style="visibility: hidden" class="transition">
         <div class="main-container" id="main-object">
             <a id="output">0</a>
+            <div id="”divInstallApp”"></div>
             <div class="button-container">
                 <button class="operation-button">⌃</button>
                 <button class="operation-button">AC</button>
@@ -32,15 +39,27 @@
                 <button class="operation-button" id="equal">=</button>
             </div>
         </div>
-        <script>
-            window.va =
-                window.va ||
-                function () {
-                    ;(window.vaq = window.vaq || []).push(arguments)
-                }
-        </script>
-        <script defer src="/_vercel/insights/script.js"></script>
         <script src="src/decimal.js"></script>
         <script src="src/script.js"></script>
+        <script>
+            if ("serviceWorker" in navigator) {
+                window.addEventListener("load", () => {
+                    navigator.serviceWorker
+                        .register("/sw.js")
+                        .then((registration) => {
+                            console.log(
+                                "Service Worker registered successfully:",
+                                registration.scope
+                            )
+                        })
+                        .catch((error) => {
+                            console.log(
+                                "Service Worker registration failed:",
+                                error
+                            )
+                        })
+                })
+            }
+        </script>
     </body>
 </html>
