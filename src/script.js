@@ -5,7 +5,12 @@ let uniqueIdCounter = 0
 // Global constants for showing the calc result and for animation effect
 const display = document.getElementById("main-object")
 const output = document.getElementById("output")
-const options = ["theme", "round"]
+const options = {
+    theme: 4,
+    round: 6,
+    "no-button": 2,
+    font: 9,
+}
 
 // Keys, that are compare with calculator buttons
 const keys = {
@@ -45,7 +50,13 @@ function saveToLocalStorage(key, value) {
     localStorage.setItem(key, JSON.stringify(value))
 }
 
-function change_setting(theme_number, setting) {
+function change_setting(setting) {
+    let theme_number = getFromLocalStorage("user_" + setting) + 1 || 2
+
+    if (theme_number > options[setting]) {
+        theme_number = 1
+    }
+
     // Search for all classes that start with setting + "-"
     const currentThemeClasses = Array.from(document.body.classList).filter(
         (theme) => theme.startsWith(setting + "-")
@@ -108,22 +119,10 @@ function handle_setting(setting) {
 
 function on_start() {
     // Handle settings
-    options.forEach(handle_setting)
-
-    // Handle transparent buttons
-    const buttons_state = getFromLocalStorage("transparentButtons") || "0"
-    if (Number(buttons_state)) {
-        document.body.classList.add("no-button")
-    }
+    Object.keys(options).forEach(handle_setting)
 
     // Remove the hidden class when the app is ready
     document.body.style = ""
-
-    // Also update the font size from local storage
-    document.body.style.setProperty(
-        "--theme-relative-font-size",
-        getFromLocalStorage("fontSize") || 1
-    )
 }
 // endregion
 // region calculator
@@ -171,16 +170,11 @@ class Calculator {
         this.control_operations = {
             "+": () => this.change_size(1.1),
             "-": () => this.change_size(1 / 1.1),
-            "*": () => this.change_font_size(1.02),
-            "/": () => this.change_font_size(1 / 1.02),
             AC: () => this.clear_settings(),
-            0: () => this.switch_buttons(),
-            1: () => change_setting(1, "theme"),
-            2: () => change_setting(2, "theme"),
-            3: () => change_setting(3, "theme"),
-            4: () => change_setting(1, "round"),
-            5: () => change_setting(2, "round"),
-            6: () => change_setting(3, "round"),
+            0: () => change_setting("no-button"),
+            1: () => change_setting("theme"),
+            2: () => change_setting("round"),
+            3: () => change_setting("font"),
         }
     }
 
@@ -195,54 +189,15 @@ class Calculator {
         alert("Not supported on web version")
     }
 
-    change_font_size(size) {
-        const currentFontSize = getComputedStyle(
-            document.body
-        ).getPropertyValue("--theme-relative-font-size")
-
-        const newFontSize = Number(currentFontSize) * size
-
-        // If new screen is too big or too small we are exiting function
-        if (newFontSize < 0.5 || newFontSize > 1.2) {
-            return
-        }
-
-        document.body.style.setProperty(
-            "--theme-relative-font-size",
-            newFontSize || 1
-        )
-
-        saveToLocalStorage("fontSize", newFontSize)
-    }
-
-    // Function for switch buttons from transparent to not transparent and ovice versa
-    switch_buttons() {
-        // Getting current state
-        let current_state = localStorage.getItem("transparentButtons") || "0"
-        current_state = Number(current_state) ? 0 : 1
-
-        // Saving current state
-        saveToLocalStorage("transparentButtons", current_state)
-
-        // Switching class
-        if (current_state) {
-            document.body.classList.add("no-button")
-        } else {
-            document.body.classList.remove("no-button")
-        }
-    }
-
     // Function for clear settings
     clear_settings() {
         document.body.classList = ["transition"]
         document.body.style = ""
 
-        options.forEach((option) => {
+        Object.keys(options).forEach((option) => {
             document.body.classList.add(option + "-1")
             saveToLocalStorage("user_" + option, 1)
         })
-        saveToLocalStorage("transparentButtons", 0)
-        saveToLocalStorage("fontSize", 1)
     }
 
     // Function for enterung the second number
