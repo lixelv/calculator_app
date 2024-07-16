@@ -43,6 +43,8 @@ const keys = {
 // Using local storage with JSON for save and get data
 function getFromLocalStorage(key) {
     const value = localStorage.getItem(key)
+    console.log(value)
+    console.log(JSON.parse(value))
     return value ? JSON.parse(value) : null
 }
 
@@ -51,7 +53,8 @@ function saveToLocalStorage(key, value) {
 }
 
 function change_setting(setting) {
-    let theme_number = getFromLocalStorage("user_" + setting) + 1 || 2
+    let theme_number = getFromLocalStorage("user_" + setting) || 1
+    theme_number++
 
     if (theme_number > options[setting]) {
         theme_number = 1
