@@ -93,7 +93,7 @@
     --size: 1;
 }
 
-.theme-2 {
+.theme-1 {
     --theme-font-color: var(--lt-color-white);
     --theme-output-font-color: var(--theme-font-color);
     --theme-font-oposite-color: var(--lt-color-black);
@@ -107,7 +107,7 @@
     --theme-scrollbar-thumb-hover-color: var(--lt-color-gray-300);
 }
 
-.theme-1 {
+.theme-2 {
     --theme-font-color: var(--lt-color-gray-700);
     --theme-output-font-color: var(--theme-font-color);
     --theme-font-oposite-color: var(--lt-color-gray-100);
