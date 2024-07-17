@@ -6,10 +6,13 @@ let uniqueIdCounter = 0
 const display = document.getElementById("main-object")
 const output = document.getElementById("output")
 const options = {
-    theme: 4,
+    theme: 2, // 2
     round: 6,
     "no-button": 2,
     font: 9,
+    color: 5,
+    intense: 4,
+    "output-intense": 6,
 }
 
 // Keys, that are compare with calculator buttons
@@ -178,6 +181,9 @@ class Calculator {
             1: () => change_setting("theme"),
             2: () => change_setting("round"),
             3: () => change_setting("font"),
+            4: () => change_setting("color"),
+            5: () => change_setting("intense"),
+            6: () => change_setting("output-intense"),
         }
     }
 
