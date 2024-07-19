@@ -1,13 +1,9 @@
 # Calculator
 
-## [Preview](https://web-calculator-tau.vercel.app/)
+## Site for [Preview](https://web-calculator-tau.vercel.app/) from web-dev branch
 
-![img](./images/p-1.png)
 ![img](./images/p-4.png)
 ![img](./images/p-2.png)
-![img](./images/p-5.png)
-![img](./images/p-3.png)
-![img](./images/p-6.png)
 
 ## Features
 
@@ -17,7 +13,7 @@ We've created a new design, beautiful and modern design for our app. Fonts, colo
 
 ### Keyboard support
 
-You can use keyboard, for all buttons on the calculator. Also, for **⌃ AC ⌫ = ×** buttons we used **Alt Del Backspace Enter Esc** keyboard buttons respectively.
+You can use keyboard, for all buttons on the calculator. Also, for **⌃ AC ⌫ = ×** buttons we used **Alt Del Backspace Enter Esc** keyboard buttons respectively. Also we supports copy and paste operations.
 
 ### Customization
 
