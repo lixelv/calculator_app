@@ -16,7 +16,12 @@ let uniqueIdCounter = 0
 // Global constants for showing the calc result and for animation effect
 const display = document.getElementById("main-object")
 const output = document.getElementById("output")
-const options = ["theme", "round"]
+const options = {
+    theme: 5,
+    round: 6,
+    "no-button": 2,
+    font: 9,
+}
 
 // Keys, that are compare with calculator buttons
 const keys = {
@@ -56,7 +61,14 @@ function saveToLocalStorage(key, value) {
     localStorage.setItem(key, JSON.stringify(value))
 }
 
-function change_setting(theme_number, setting) {
+function change_setting(setting) {
+    let theme_number = getFromLocalStorage("user_" + setting) || 1
+    theme_number++
+
+    if (theme_number > options[setting]) {
+        theme_number = 1
+    }
+
     // Search for all classes that start with setting + "-"
     const currentThemeClasses = Array.from(document.body.classList).filter(
         (theme) => theme.startsWith(setting + "-")
@@ -119,13 +131,7 @@ function handle_setting(setting) {
 
 function on_start() {
     // Handle settings
-    options.forEach(handle_setting)
-
-    // Handle transparent buttons
-    const buttons_state = getFromLocalStorage("transparentButtons") || "0"
-    if (Number(buttons_state)) {
-        document.body.classList.add("no-button")
-    }
+    Object.keys(options).forEach(handle_setting)
 
     // Handle position
     position = getFromLocalStorage("position")
@@ -141,12 +147,6 @@ function on_start() {
 
     // Remove the hidden class when the app is ready
     document.body.style = ""
-
-    // Also update the font size from local storage
-    document.body.style.setProperty(
-        "--theme-relative-font-size",
-        getFromLocalStorage("fontSize") || 1
-    )
 }
 // endregion
 // region calculator
@@ -192,18 +192,13 @@ class Calculator {
             "/": this.make_operation.bind(this),
         }
         this.control_operations = {
-            "+": () => this.change_size(1.1),
-            "-": () => this.change_size(1 / 1.1),
-            "*": () => this.change_font_size(1.02),
-            "/": () => this.change_font_size(1 / 1.02),
+            "+": () => change_size(1.1),
+            "-": () => change_size(1 / 1.1),
             AC: () => this.clear_settings(),
-            0: () => this.switch_buttons(),
-            1: () => change_setting(1, "theme"),
-            2: () => change_setting(2, "theme"),
-            3: () => change_setting(3, "theme"),
-            4: () => change_setting(1, "round"),
-            5: () => change_setting(2, "round"),
-            6: () => change_setting(3, "round"),
+            0: () => change_setting("no-button"),
+            1: () => change_setting("theme"),
+            2: () => change_setting("round"),
+            3: () => change_setting("font"),
         }
     }
 
@@ -211,40 +206,6 @@ class Calculator {
     is_numeric(str) {
         if (typeof str != "string") return false // we only process strings!
         return !isNaN(str) && !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
-    }
-
-    // Function for change window size
-    change_size(size) {
-        const currentSize = currentWindow.getSize()
-        const newHeight = currentSize[1] * size
-
-        // If new screen is too big or too small we are exiting function
-        if (newHeight < 200 || newHeight > 1200) {
-            return
-        }
-
-        // Changing window size
-        updateWindowSize(newHeight)
-    }
-
-    change_font_size(size) {
-        const currentFontSize = getComputedStyle(
-            document.body
-        ).getPropertyValue("--theme-relative-font-size")
-
-        const newFontSize = Number(currentFontSize) * size
-
-        // If new screen is too big or too small we are exiting function
-        if (newFontSize < 0.5 || newFontSize > 1.2) {
-            return
-        }
-
-        document.body.style.setProperty(
-            "--theme-relative-font-size",
-            newFontSize || 1
-        )
-
-        saveToLocalStorage("fontSize", newFontSize)
     }
 
     // Function for switch buttons from transparent to not transparent and ovice versa
@@ -269,15 +230,13 @@ class Calculator {
         document.body.classList = ["transition"]
         document.body.style = ""
 
-        options.forEach((option) => {
+        Object.keys(options).forEach((option) => {
             document.body.classList.add(option + "-1")
             saveToLocalStorage("user_" + option, 1)
         })
-        saveToLocalStorage("transparentButtons", 0)
-        saveToLocalStorage("fontSize", 1)
     }
 
-    // Function for enterung the second number
+    // Function for entering the second number
     make_operation(value) {
         this.current_operation = value
         this.current_number = null
@@ -288,13 +247,8 @@ class Calculator {
 
     // Function for handle paste if it is legit
     handle_paste(text) {
-        const expression = /[^0-9e\.\,\-\+]/
-
-        if (expression.test(text)) {
-            return ""
-        } else {
-            return text
-        }
+        const expression = /[^0-9e\.\,\-\+]/g
+        return text.replace(expression, "")
     }
 
     // Function adding a number to the output
@@ -363,7 +317,7 @@ class Calculator {
             this.current_number = this.output.innerHTML
         }
 
-        // Saving the result as fisrt operation number
+        // Saving the result as first operation number
         this.prev_num = result
 
         // If result is not finite we are showing error
@@ -511,6 +465,29 @@ Array.from(document.getElementsByClassName("close-button")).forEach(
 // region electron
 
 if (currentWindow !== undefined) {
+    // For scrolling change size
+    display.addEventListener("wheel", (e) => {
+        if (e.deltaY > 0) {
+            change_size(1.075)
+        } else {
+            change_size(0.925)
+        }
+    })
+
+    // Function for change window size
+    function change_size(size) {
+        const currentSize = currentWindow.getSize()
+        const newHeight = currentSize[1] * size
+
+        // If new screen is too big or too small we are exiting function
+        if (newHeight < 200 || newHeight > 1200) {
+            return
+        }
+
+        // Changing window size
+        updateWindowSize(newHeight)
+    }
+
     function updateWindowSize(height, first_time = false) {
         const ratio = 1.5
         let removed = false

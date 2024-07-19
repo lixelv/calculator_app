@@ -1,6 +1,6 @@
 {
     "name": "floating_calculator",
-    "version": "1.1.0",
+    "version": "1.2.2",
     "main": "main.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,7 +16,7 @@
     "description": "",
     "build": {
         "appId": "com.lixelv.calculator",
-        "productName": "Calculator",
+        "productName": "Калькулятор",
         "win": {
             "target": "nsis",
             "icon": "/src/assets/icon.ico"
