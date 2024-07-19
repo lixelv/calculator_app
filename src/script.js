@@ -43,8 +43,6 @@ const keys = {
 // Using local storage with JSON for save and get data
 function getFromLocalStorage(key) {
     const value = localStorage.getItem(key)
-    console.log(value)
-    console.log(JSON.parse(value))
     return value ? JSON.parse(value) : null
 }
 
@@ -214,13 +212,8 @@ class Calculator {
 
     // Function for handle paste if it is legit
     handle_paste(text) {
-        const expression = /[^0-9e\.\,\-\+]/
-
-        if (expression.test(text)) {
-            return ""
-        } else {
-            return text
-        }
+        const expression = /[^0-9e\.\,\-\+]/g
+        return text.replace(expression, "")
     }
 
     // Function adding a number to the output
