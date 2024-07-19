@@ -17,7 +17,7 @@ You can use keyboard, for all buttons on the calculator. Also, for **⌃ AC ⌫ 
 
 ### Customization
 
-We've added a new ⌃ button for changing your settings, just press it, and after that you can customize your calculator, whatever like. With 1 - theme, with 2 - round, with 3 - font size, with 0 - buttons transparency. Also change window size by +- buttons.
+We've added a new ⌃ button for changing your settings, just press it, and after that you can customize your calculator, whatever like. With 1 - theme, with 2 - round, with 3 - font size, with 0 - buttons transparency. Also change window size by mouse scrolling or pressing +- buttons with ⌃.
 
 ## Download
 
