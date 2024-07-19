@@ -339,6 +339,12 @@
 
 body,
 html {
+    --theme-output-font-size: calc(
+        var(--base-output-font-size) * var(--theme-relative-font-size)
+    );
+    --theme-button-font-size: calc(
+        var(--base-button-font-size) * var(--theme-relative-font-size)
+    );
     height: 100%;
     margin: 0;
     overflow-y: hidden;
