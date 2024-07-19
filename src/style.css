@@ -242,42 +242,6 @@ html {
   overflow-y: hidden;
   overflow-x: hidden;
   background-color: var(--theme-background-color);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  --theme-button-font-size: calc(
-      var(--base-button-font-size) * var(--theme-relative-font-size)
-  );
-  --theme-output-font-size: calc(
-      var(--base-output-font-size) * var(--theme-relative-font-size)
-  );
-  --theme-font-color: color-mix(
-      in srgb,
-      var(--theme-special-color),
-      var(--theme-font-color-base) 85%
-  );
-  --theme-output-font-color: color-mix(
-      in srgb,
-      var(--theme-special-color),
-      var(--theme-background-color-base) 50%
-  );
-  --theme-font-oposite-color: color-mix(
-      in srgb,
-      var(--theme-special-color),
-      var(--theme-font-oposite-color-base) 85%
-  );
-  --theme-background-color: var(--theme-background-color-base);
-  --theme-operation-color: color-mix(
-      in srgb,
-      var(--theme-special-color),
-      var(--theme-operation-color-base) 85%
-  );
-  --theme-number-color: color-mix(
-      in srgb,
-      var(--theme-special-color),
-      var(--theme-number-color-base) 85%
-  );
-  --theme-button-oposite-color: var(--theme-button-oposite-color-base);
 }
 
 button {
@@ -379,9 +343,13 @@ button {
 
 @keyframes pressed_button {
   10% {
+    background: var(--theme-button-oposite-color);
+    color: var(--theme-font-oposite-color);
     transform: scale(calc(var(--size) * 1.075));
   }
   100% {
+    background: var(--background-color);
+    color: var(--font-color);
     transform: scale(calc(var(--size)));
   }
 }
