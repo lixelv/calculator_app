@@ -18,6 +18,10 @@ async def read_root():
     with open("src/index.html", "r", encoding="utf-8") as f:
         return HTMLResponse(f.read())
 
+@app.get("/og")
+async def og():
+    return FileResponse("src/assets/logo-512 — копия.png")
+
 @app.get("/sw.js")
 async def service_worker():
     return FileResponse("src/sw.js", media_type="application/javascript", headers={
